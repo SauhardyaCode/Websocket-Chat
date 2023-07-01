@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% block title %}{{name}} ({{room}}){% endblock %}
+{% block style %}
+<style>
+    .message-box {
+        height: 30em;
+        margin: 3%;
+        padding: 3%;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        background-color: gainsboro;
+        border-radius: 10px;
+        border: 2px black solid;
+    }
+
+    .messages {
+        overflow-y: scroll;
+        flex: 1;
+        width: 100%;
+    }
+
+    .inputs {
+        padding: 1%;
+        display: flex;
+        width: 100%;
+    }
+
+    .inputs input {
+        padding: 1%;
+        border-radius: 10px;
+        border: none;
+        outline: 2px rgb(99, 99, 234) solid;
+        width: 100%;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class="message-box">
+    <h3>Chat Room: {{room}}</h3>
+    <div class="messages" id="messages" style="text-align: left;"></div>
+    <div class="inputs"><br>
+        <input type="text" rows="3" placeholder="Write a message..." name="message" id="message">
+        <button type="button" name="send" id="send-btn" class="btn btn-dark"
+            onclick="JavaScript:send_message()">Send</button>
+    </div>
+</div>
+<script>
+    const message_box = document.getElementById('message');
+    const send_btn = document.getElementById('send-btn');
+    var socketio = io();
+
+    function create_message(name, msg) {
+        const content = `<div class="text"><strong>${name}</strong>: ${msg}</div>`;
+        document.getElementById('messages').innerHTML += content;
+    };
+
+    function send_message() {
+        if (message_box.value != "") {
+            socketio.emit("message", { data: message_box.value });
+            message_box.value = "";
+        }
+    };
+
+    socketio.on("message", (data) => {
+        create_message(data.name, data.message);
+    });
+
+    message_box.addEventListener("keypress", (ev) => {
+        if (ev.key == "Enter") {
+            send_btn.click();
+        }
+    });
+</script>
+{% for msg in messages %}
+<script>
+    create_message("{{msg.name}}", "{{msg.message}}")
+</script>
+{% endfor %}
+{% endblock %}

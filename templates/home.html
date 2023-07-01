@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Chat Room{% endblock %}
+{% block style %}
+<style>
+  form {
+    margin: 5%;
+    padding: 5%;
+    padding-top: 2%;
+    background-color: beige;
+  }
+</style>
+{% endblock %}
+{% block content %}
+<form method="post" autocomplete="off">
+  <h3>Enter the chat room</h3><br><br>
+  <div class="form-group row">
+    <div class="col-sm-10">
+      <b><label class="col-sm-2">Name:</label></b>
+      <input type="text" placeholder="Pick up a name!" name="name" value="{{name}}" required>
+    </div>
+  </div><br>
+  <div class="form-group row">
+    <div class="col-sm-10">
+      <b><label class="col-sm-2">Code:</label></b>
+      <input type="text" placeholder="Room Code" name="code" value="{{code}}">
+    </div>
+  </div><br>
+  <button type="submit" name="join" class="btn btn-primary">Join a Room</button><br><br>
+  <button type="submit" name="create" class="btn btn-secondary" style="width: 80%;">Create a Room</button>
+</form>
+{% endblock %}
